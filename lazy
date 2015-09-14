@@ -1,0 +1,115 @@
+#!/bin/bash
+
+CRLF="$(printf '\r\n')"
+LOGFILE="lazy.log"
+
+send() {
+	local buf clen ctype status msg
+
+	buf="$1"
+	clen=$(echo -n "$buf" |wc -c)
+	ctype="text/html; charset=utf-8"
+	status=${2:-200}
+	msg=${3:-OK}
+
+	printf "HTTP/1.1 %s %s\r\n" "$status" "$msg"
+	printf "Content-Length: %s\r\n" "$clen"
+	printf "Content-Type: %s\r\n" "$ctype"
+	printf "Connection: close\r\n"
+	printf "Date: %s\r\n" "$(date)"
+	printf "Server: lazy/0.0.1\r\n"
+	printf "\r\n"
+	printf "%s" "$buf"
+}
+
+serve() {
+	header=$1
+	case "${header[Method]}" in
+	GET|HEAD)
+		ret="$(. hook)"
+		fail=$?
+		if [ $fail -eq 0 ]; then
+			[ "${header[Method]}" = "HEAD" ] && ret=""
+			send "$ret"
+		else
+			case $ret in
+			404) send "Not Found: ${header[Resource]}" 404 "Not Found";;
+			esac
+		fi
+		;;
+	*) send "Server Error: unknown method ${header[Method]}." 500 "Internal Server Error";;
+	esac
+}
+
+newreq() {
+	local -A header
+	local comp k v
+
+	while read -r line; do
+		if [ -z "${header[Method]}" ]; then
+			header["Method"]="$(echo -n $line |cut -d' ' -f1)"
+			header["Resource"]="$(echo -n $line |cut -d' ' -f2)"
+			header["Http-Version"]="$(echo -n $(echo $line |cut -d' ' -f3) | cut -d'/' -f2)"
+			continue
+		fi
+
+		if [ "$line" != "$CRLF" ]; then
+			k="$(echo -n $line |cut -d: -f1)"
+			v="$(echo -n $line |cut -d: -f2-)"
+			header[$k]="$v"
+		else
+			serve "$header"
+			header=() # reset
+		fi
+	done < "$1"
+}
+
+# needed?
+urlencode() {
+	echo -n "$1" |awk -niord '{printf RT?$0chr("0x"substr(RT,2)):$0}' RS=%..
+}
+
+urldecode() {
+	printf "%b" "$(echo -n $1 |sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g;')";
+}
+
+detecthost() {
+	iface="$(ifconfig -s |cut -d' ' -f1 |grep -v 'Iface\|lo' |head -1)"
+	host="$(ifconfig $iface |grep inet: |cut -d: -f2 |cut -d' ' -f1)"
+	[ -z "$host" ] && host="localhost"
+	echo -n "$host"
+}
+
+cleanup() {
+	for FN in $@; do
+		[ -e "$FN" ] && rm -f "$FN"
+	done
+}
+
+main() {
+	local -r host="${1:-$(detecthost)}"
+	local -r port="${2:-1234}"
+	local -r fifo="$(mktemp -u lazy.fifo.XXXXX)"
+	local -r pids="$(mktemp -u lazy.pids.XXXXX)"
+
+	trap "cleanup '$fifo' '$pids'" EXIT INT TERM HUP
+	mkfifo -m 600 "$fifo"
+
+	echo "Running on ${host}:${port}..."
+	nc -kl "$host" $port \
+		0< <(echo -n " $BASHPID " >> "$pids"; while : ; do newreq "$fifo" ; done) \
+		1> >(echo -n " $BASHPID " >> "$pids"; while : ; do cat - > "$fifo" ; done) \
+		2>> "$LOGFILE"
+	rv=$?
+
+	if [ $rv -ne 0 -a $rv -ne 130 ]; then
+		echo "$0 ($rv): an error occurred. Please, check the log for more info."
+		kill $(cat $pids)
+		rm -f "$pids"
+		exit 1
+	fi
+
+	echo
+}
+
+main "$@"

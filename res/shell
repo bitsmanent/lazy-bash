@@ -1,0 +1,49 @@
+cat <<"HTML"
+<style>
+iframe[name="remote"] {
+	opacity: 0;
+	position: fixed;
+	z-index: -1;
+	width: 0;
+	height: 0;
+}
+</style>
+<div id="shell">
+	<a target="remote" href="/run/amixer set Master 3%+">VOL +3%</a>
+	| <a target="remote" href="/run/amixer set Master 3%-">VOL -3%</a>
+	| <a target="remote" href="/run/amixer set Master toggle">Mute/Unmute</a>
+	| <a target="remote" href="/run/export DISPLAY=:0;(xset q|grep -qc 'Monitor is Off')&&xset dpms force on||xset dpms force off">Screen on/off</a>
+	| <a target="_blank" href="/run/ls -lh /etc |grep \\\\.d$">Test link</a>
+	<iframe src="" name="remote"></iframe>
+</div>
+<script>
+(function() {
+function $(s) {
+	return document.querySelector(s);
+}
+
+function $$(s) {
+	return document.querySelectorAll(s);
+}
+
+function sanitize(s) {
+	return s.replace(/\\\\/g, '%5c');
+}
+
+function sanitizeall() {
+	var elems, i, len;
+
+	elems = $$('a[href]');
+	len = elems.length;
+	for(i = 0; i < len; ++i)
+		elems[i].setAttribute('href', sanitize(elems[i].getAttribute('href')));
+}
+
+function main() {
+	sanitizeall();
+}
+
+window.addEventListener('DOMContentLoaded', main);
+})();
+</script>
+HTML

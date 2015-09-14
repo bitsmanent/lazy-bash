@@ -1,0 +1,21 @@
+cat <<HTML
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+
+		<title>$2</title>
+	</head>
+	<body>
+		<div id="container">
+			<header>
+				<h1>Lazy shell</h1>
+			</header>
+HTML
+			. "res/$1" "$3"
+cat <<-HTML
+		</div>
+	</body>
+</html>
+HTML

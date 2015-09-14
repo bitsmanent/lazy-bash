@@ -1,0 +1,10 @@
+case ${header[Resource]} in
+	/) . res/tpl shell "Lazy shell";;
+	/run/*)
+		skip="$(echo 1+$(echo -n "/run/" |wc -c) | bc)"
+		cmd="$(echo ${header[Resource]} |cut -b ${skip}-)"
+		cmd="$(urldecode $cmd)"
+		. res/tpl spawn "Running ${cmd}..." "$cmd"
+		;;
+	*) echo 404; return 1;;
+esac

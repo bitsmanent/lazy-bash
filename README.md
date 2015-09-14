@@ -20,7 +20,6 @@ Installation
 Running
 =======
 ```
-$ cd <webroot>
 $ lazy
 ```
 

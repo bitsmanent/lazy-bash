@@ -25,11 +25,11 @@ send() {
 serve() {
 	header=$1
 	case "${header[Method]}" in
-	GET|HEAD)
+	HEAD) send "";;
+	GET)
 		ret="$(. hook)"
 		fail=$?
 		if [ $fail -eq 0 ]; then
-			[ "${header[Method]}" = "HEAD" ] && ret=""
 			send "$ret"
 		else
 			case $ret in

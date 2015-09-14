@@ -19,8 +19,10 @@ Installation
 
 Running
 =======
+```
 $ cd <webroot>
 $ lazy
+```
 
 Configuration
 =============

@@ -1,0 +1,17 @@
+if [ -n "$1" ]; then
+	case $1 in
+	up) amixer set Master 3%+ ;;
+	down) amixer set Master 3%- ;;
+	togglemute) amixer set Master toggle ;;
+	esac
+	# XXX output volume and mute status
+	exit 0
+fi
+
+cat <<"HTML"
+<div id="volctrl">
+	<a href="/runmod/volctrl up">Vol up</a>
+	<a href="/runmod/volctrl down">Vol down</a>
+	<a href="/runmod/volctrl togglemute">Toggle mute</a>
+</div>
+HTML

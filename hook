@@ -6,5 +6,12 @@ case ${header[Resource]} in
 		cmd="$(urldecode $cmd)"
 		. res/tpl spawn "Running ${cmd}..." "$cmd"
 		;;
+	/runmod/*)
+		skip="$(echo 1+$(echo -n "/runmod/" |wc -c) | bc)"
+		cmd="$(echo ${header[Resource]} |cut -b ${skip}-)"
+		cmd="$(urldecode $cmd)"
+		cmd="mods/"$cmd
+		. $cmd
+		;;
 	*) echo 404; return 1;;
 esac

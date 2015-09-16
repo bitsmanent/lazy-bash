@@ -1,0 +1,16 @@
+if [ -n "$1" ]; then
+	case $1 in
+	toggle)
+		export DISPLAY=:0
+		xset q|grep -qc 'Monitor is Off' && xset dpms force on || xset dpms force off
+		;;
+	esac
+	# XXX output current state
+	exit 0
+fi
+
+cat <<"HTML"
+<div id="dpyctrl">
+	<a href="/runmod/dpyctrl toggle">Toggle</a>
+</div>
+HTML

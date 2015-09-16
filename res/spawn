@@ -1,5 +1,1 @@
-cat <<HTML
-<pre>
-$(echo "$1" |sh - 2>&1)
-</pre>
-HTML
+echo "$1" |sh - 2>&1

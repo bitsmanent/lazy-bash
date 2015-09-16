@@ -6,6 +6,23 @@ cat <<HTML
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 
 		<title>$2</title>
+
+		<style>
+		* {margin:0;padding:0}
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+		header {
+			padding: 8px;
+			background: #eee;
+		}
+		header h1 {
+			font: arial, sans-serif, helvetica, monospace;
+			font-size: 16px;
+			text-transform: uppercase;
+		}
+		</style>
 	</head>
 	<body>
 		<div id="container">

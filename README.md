@@ -21,7 +21,8 @@ An installation script will be available. For now, just run it.
 Running
 =======
 ```
-$ lazy
+$ cd <path of lazy-bash>
+$ ./lazy
 ```
 
 Configuration

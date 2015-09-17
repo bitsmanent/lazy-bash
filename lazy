@@ -27,7 +27,7 @@ serve() {
 	case "${header[Method]}" in
 	HEAD) send "";;
 	GET)
-		ret="$(. hook)"
+		ret="$(. dispatch)"
 		fail=$?
 		if [ $fail -eq 0 ]; then
 			send "$ret"

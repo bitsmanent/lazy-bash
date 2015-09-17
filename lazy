@@ -1,13 +1,12 @@
 #!/bin/bash
 
-declare -gr CRLF="$(printf '\r\n')"
-declare -gr LOGFILE="$(pwd)/lazy.log"
-
 declare -g APPDIR="app/"
+declare -g LOGFILE="$(pwd)/lazy.log"
 
 declare -gr CONTENT=0
 declare -gr STATUSCODE=4
 declare -gr FILE=5
+declare -gr CRLF="$(printf '\r\n')"
 
 send() {
 	local buf clen ctype status msg
@@ -110,8 +109,8 @@ cleanup() {
 main() {
 	local -r host="${1:-$(detecthost)}"
 	local -r port="${2:-1234}"
-	local -r fifo="$(mktemp -u .lazy.fifo.XXXXX)"
-	local -r pids="$(mktemp -u .lazy.pids.XXXXX)"
+	local -r fifo="$(mktemp -u /tmp/lazy.fifo.XXXXX)"
+	local -r pids="$(mktemp -u /tmp/lazy.pids.XXXXX)"
 
 	[ -n "$3" ] && APPDIR=$3
 	if [ ! -d "$APPDIR" ]; then

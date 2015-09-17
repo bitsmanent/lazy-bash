@@ -30,4 +30,4 @@ $ lazy
 
 Configuration
 =============
-The customization is done by edit the source code, then (re)istall lazy.
+The customization is done by editing the source code, then (re)istall lazy.

@@ -4,7 +4,7 @@ if [ -n "$1" ]; then
 		export DISPLAY=:0
 		xset q|grep -qc 'Monitor is Off' && xset dpms force on || xset dpms force off
 		;;
-	*) echo 404; return 0;;
+	*) echo 404; return $STATUSCODE;;
 	esac
 	# XXX output current state
 	exit 0

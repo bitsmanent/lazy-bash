@@ -3,7 +3,7 @@ if [ -n "$1" ]; then
 	up) amixer set Master 3%+ ;;
 	down) amixer set Master 3%- ;;
 	togglemute) amixer set Master toggle ;;
-	*) echo 404; return 0;;
+	*) echo 404; return $STATUSCODE;;
 	esac
 	# XXX output volume and mute status
 	exit 0

@@ -22,7 +22,7 @@ send() {
 	printf "Content-Type: %s\r\n" "$ctype"
 	printf "Connection: close\r\n"
 	printf "Date: %s\r\n" "$(date)"
-	printf "Server: lazy/0.0.1\r\n"
+	printf "Server: lazy/0.1\r\n"
 	printf "\r\n"
 	printf "%s" "$buf"
 }

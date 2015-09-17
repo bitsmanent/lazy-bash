@@ -19,7 +19,7 @@ Installation
 An installation script will be available. For now:
 
 ```
-$ sudo cp lazy /usr/bin
+$ sudo cp lazy /usr/local/bin
 ```
 
 Running

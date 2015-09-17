@@ -16,11 +16,7 @@ In order to run lazy-bash you need the bash shell and a Unix userland.
 
 Installation
 ============
-An installation script will be available. For now:
-
-```
-$ sudo cp lazy /usr/local/bin
-```
+An installation script will be available. For now, just run it.
 
 Running
 =======

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -g APPDIR="app/"
-declare -g LOGFILE="/tmp/$(pwd)/lazy.log"
+declare -g LOGFILE="/tmp/lazy.log"
 
 declare -gr CONTENT=0
 declare -gr STATUSCODE=4

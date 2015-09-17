@@ -27,6 +27,7 @@ Running
 $ cd <web-root>
 $ lazy
 ```
+Note: you must be root in order to run lazy-bash on port 80.
 
 Configuration
 =============

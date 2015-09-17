@@ -1,5 +1,5 @@
 case ${header[Resource]} in
-	/) . res/tpl shell "Lazy shell";;
+	/) . ./res/tpl shell "Lazy shell";;
 	/runmod/*)
 		skip="$(echo 1+$(echo -n "/runmod/" |wc -c) | bc)"
 		cmd="$(echo ${header[Resource]} |cut -b ${skip}-)"

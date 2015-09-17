@@ -2,6 +2,7 @@
 
 CRLF="$(printf '\r\n')"
 LOGFILE="lazy.log"
+APPDIR="app/"
 
 send() {
 	local buf clen ctype status msg
@@ -27,7 +28,7 @@ serve() {
 	case "${header[Method]}" in
 	HEAD) send "";;
 	GET)
-		ret="$(. dispatch)"
+		ret="$(cd "$APPDIR";. main)"
 		fail=$?
 		if [ $fail -eq 0 ]; then
 			send "$ret"
@@ -89,13 +90,19 @@ cleanup() {
 main() {
 	local -r host="${1:-$(detecthost)}"
 	local -r port="${2:-1234}"
-	local -r fifo="$(mktemp -u lazy.fifo.XXXXX)"
-	local -r pids="$(mktemp -u lazy.pids.XXXXX)"
+	local -r fifo="$(mktemp -u .lazy.fifo.XXXXX)"
+	local -r pids="$(mktemp -u .lazy.pids.XXXXX)"
+
+	[ -n "$3" ] && APPDIR=$3
+	if [ ! -d "$APPDIR" ]; then
+		echo "${0}: ${APPDIR}: wrong path"
+		exit -1
+	fi
 
 	trap "cleanup '$fifo' '$pids'" EXIT INT TERM HUP
 	mkfifo -m 600 "$fifo"
 
-	echo "Running on ${host}:${port}..."
+	echo "Running on ${host}:${port}/${APPDIR}..."
 	nc -kl "$host" $port \
 		0< <(echo -n " $BASHPID " >> "$pids"; while : ; do newreq "$fifo" ; done) \
 		1> >(echo -n " $BASHPID " >> "$pids"; while : ; do cat - > "$fifo" ; done) \

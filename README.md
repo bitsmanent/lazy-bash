@@ -18,7 +18,8 @@ Installation
 ============
 An installation script will be available soon. For now:
 ```
-$ sudo cp lazy /usr/local/bin
+$ chmod +x lazy
+$ sudo cp -p lazy /usr/local/bin
 ```
 
 Running

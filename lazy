@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -g APPDIR="app/"
+declare -g WEBROOT="$(pwd)"
 declare -g LOGFILE="/tmp/lazy.log"
 
 declare -gr CONTENT=0
@@ -39,14 +39,14 @@ serve() {
 	case "${header[Method]}" in
 	HEAD) send "";;
 	GET)
-		ret="$(cd "$APPDIR";. main)"
+		ret="$(cd "$WEBROOT";. main)"
 		rv=$?
 		case $rv in
 
 		$CONTENT) send "$ret";;
 		$STATUSCODE) sendsc "$ret";;
 		$FILE)
-			ret="${APPDIR}/${ret}"
+			ret="${WEBROOT}/${ret}"
 			if [ ! -f "$ret" ]; then
 				sendsc 404
 				break
@@ -112,16 +112,22 @@ main() {
 	local -r fifo="$(mktemp -u /tmp/lazy.fifo.XXXXX)"
 	local -r pids="$(mktemp -u /tmp/lazy.pids.XXXXX)"
 
-	[ -n "$3" ] && APPDIR=$3
-	if [ ! -d "$APPDIR" ]; then
-		echo "${0}: ${APPDIR}: wrong path"
+	[ -n "$3" ] && WEBROOT=$3
+	if [ ! -d "$WEBROOT" ]; then
+		echo "${0}: ${WEBROOT}: wrong path"
 		exit -1
 	fi
 
 	trap "cleanup '$fifo' '$pids'" EXIT INT TERM HUP
+
+	if [ ! -f "${WEBROOT}/main" ]; then
+		echo "$0: ${WEBROOT}: missing main file"
+		exit -2
+	fi
+
 	mkfifo -m 600 "$fifo"
 
-	echo "Running on ${host}:${port}/${APPDIR}..."
+	echo "Running on ${host}:${port}/${WEBROOT}..."
 	nc -kl "$host" $port \
 		0< <(echo -n " $BASHPID " >> "$pids"; while : ; do newreq "$fifo" ; done) \
 		1> >(echo -n " $BASHPID " >> "$pids"; while : ; do cat - > "$fifo" ; done) \

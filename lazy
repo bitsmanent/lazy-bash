@@ -1,17 +1,22 @@
 #!/bin/bash
 
-CRLF="$(printf '\r\n')"
-LOGFILE="lazy.log"
-APPDIR="app/"
+declare -gr CRLF="$(printf '\r\n')"
+declare -gr LOGFILE="$(pwd)/lazy.log"
+
+declare -g APPDIR="app/"
+
+declare -gr CONTENT=0
+declare -gr STATUSCODE=4
+declare -gr FILE=5
 
 send() {
 	local buf clen ctype status msg
 
 	buf="$1"
-	clen=$(echo -n "$buf" |wc -c)
-	ctype="text/html; charset=utf-8"
 	status=${2:-200}
 	msg=${3:-OK}
+	ctype="${4:-text/html; charset-utf-8}"
+	clen=$(echo -n "$buf" |wc -c)
 
 	printf "HTTP/1.1 %s %s\r\n" "$status" "$msg"
 	printf "Content-Length: %s\r\n" "$clen"
@@ -23,20 +28,35 @@ send() {
 	printf "%s" "$buf"
 }
 
+sendsc() {
+	case $1 in
+	404) send "Not Found: ${header[Resource]}" 404 "Not Found";;
+	*) send "Internal Server Error" 500 "Internal Server Error";;
+	esac
+}
+
 serve() {
 	header=$1
 	case "${header[Method]}" in
 	HEAD) send "";;
 	GET)
 		ret="$(cd "$APPDIR";. main)"
-		fail=$?
-		if [ $fail -eq 0 ]; then
-			send "$ret"
-		else
-			case $ret in
-			404) send "Not Found: ${header[Resource]}" 404 "Not Found";;
-			esac
-		fi
+		rv=$?
+		case $rv in
+
+		$CONTENT) send "$ret";;
+		$STATUSCODE) sendsc "$ret";;
+		$FILE)
+			ret="${APPDIR}/${ret}"
+			if [ ! -f "$ret" ]; then
+				sendsc 404
+				break
+			fi
+			mime="$(mimetype "$ret" |cut -d: -f2 |tr -d ' ')"
+			send "$(cat "$ret")" 200 "OK" "$mime"
+			;;
+
+		esac
 		;;
 	*) send "Server Error: unknown method ${header[Method]}." 500 "Internal Server Error";;
 	esac
@@ -110,7 +130,7 @@ main() {
 	rv=$?
 
 	if [ $rv -ne 0 -a $rv -ne 130 ]; then
-		echo "$0 ($rv): an error occurred. Please, check the log for more info."
+		echo "$0: an error occurred."
 		kill $(cat $pids)
 		rm -f "$pids"
 		exit 1

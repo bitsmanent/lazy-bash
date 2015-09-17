@@ -11,8 +11,8 @@ fi
 
 cat <<"HTML"
 <div id="volctrl">
-	<a href="/runmod/volctrl up">Vol up</a>
-	<a href="/runmod/volctrl down">Vol down</a>
-	<a href="/runmod/volctrl togglemute">Toggle mute</a>
+	<a href="/mod/volctrl up">Vol up</a>
+	<a href="/mod/volctrl down">Vol down</a>
+	<a href="/mod/volctrl togglemute">Toggle mute</a>
 </div>
 HTML

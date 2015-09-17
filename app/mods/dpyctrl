@@ -12,6 +12,6 @@ fi
 
 cat <<"HTML"
 <div id="dpyctrl">
-	<a href="/runmod/dpyctrl toggle">Toggle</a>
+	<a href="/mod/dpyctrl toggle">Toggle</a>
 </div>
 HTML

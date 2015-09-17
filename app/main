@@ -1,11 +1,13 @@
+rescls() {
+	local -r res="$1"
+	local -r skip="$(echo 1+$(echo -n "${res}" |wc -c) | bc)"
+	local -r cmd="$(echo ${header[Resource]} |cut -b ${skip}-)"
+	echo "$(urldecode $cmd)"
+}
+
 case ${header[Resource]} in
-	/) . ./res/tpl shell "Lazy shell";;
-	/runmod/*)
-		skip="$(echo 1+$(echo -n "/runmod/" |wc -c) | bc)"
-		cmd="$(echo ${header[Resource]} |cut -b ${skip}-)"
-		cmd="$(urldecode $cmd)"
-		cmd="mods/"$cmd
-		. $cmd
-		;;
-	*) echo 404; return 1;;
+	/) . ./res/shell;;
+	/mod/*) res="mods/$(rescls "/mod/")"; . $res;;
+	/res/*) echo -n "res/$(rescls "/res/")"; return $FILE;;
+	*) echo -n 404; return $STATUSCODE;;
 esac

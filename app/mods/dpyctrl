@@ -1,8 +1,17 @@
+export DISPLAY=:0
+
 if [ -n "$1" ]; then
+	info="$(xrandr |grep ' connected' |cut -d'(' -f1)"
+	#out="$(echo $info |cut -d' ' -f1)"
+	#state="$(echo $info |cut -d' ' -f2)"
+	res="$(echo $info |cut -d' ' -f3)"
+	[ -z "$res" ] && ison=0 || ison=1
+
 	case $1 in
 	toggle)
-		export DISPLAY=:0
-		xset q|grep -qc 'Monitor is Off' && xset dpms force on || xset dpms force off
+		cmd="xrandr -d $DISPLAY --output LVDS1"
+		[ $ison -eq 0 ] && cmd="$cmd --auto" || cmd="$cmd --off"
+		$cmd
 		;;
 	*) echo 404; return $STATUSCODE;;
 	esac

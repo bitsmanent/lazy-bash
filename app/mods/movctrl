@@ -8,12 +8,11 @@ if [ -n "$1" ]; then
 	togglepause) xdotool key --delay 0 space ;;
 	*) echo 404; return $STATUSCODE;;
 	esac
-	# XXX output volume and mute status
 	exit 0
 fi
 
 cat <<"HTML"
-<div id="volctrl">
+<div id="movctrl">
 	<a href="/mod/movctrl seekright">&rarr;</a>
 	<a href="/mod/movctrl seekleft">&larr;</a>
 	<a href="/mod/movctrl togglepause">(un)pause</a>

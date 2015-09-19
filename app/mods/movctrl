@@ -1,0 +1,21 @@
+# Do not show if cannot works
+[ -z "$(which xdotool)" ] && exit 1
+
+if [ -n "$1" ]; then
+	case $1 in
+	seekright) xdotool key --clearmodifiers --delay 0 Right ;;
+	seekleft) xdotool key --clearmodifiers --delay 0 Left ;;
+	togglepause) xdotool key --delay 0 space ;;
+	*) echo 404; return $STATUSCODE;;
+	esac
+	# XXX output volume and mute status
+	exit 0
+fi
+
+cat <<"HTML"
+<div id="volctrl">
+	<a href="/mod/movctrl seekright">&rarr;</a>
+	<a href="/mod/movctrl seekleft">&larr;</a>
+	<a href="/mod/movctrl togglepause">(un)pause</a>
+</div>
+HTML

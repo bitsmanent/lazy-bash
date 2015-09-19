@@ -19,6 +19,7 @@ cat <<HTML
 			<div id="shell">
 				<ul>
 					<li>$(. mods/volctrl)</li>
+					<li>$(. mods/movctrl)</li>
 					<li>$(. mods/dpyctrl)</li>
 				</ul>
 			</div>

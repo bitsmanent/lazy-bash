@@ -21,6 +21,7 @@ fi
 
 cat <<"HTML"
 <div id="dpyctrl">
+	<h2>Display</h2>
 	<a href="/mod/dpyctrl toggle">Toggle screen</a>
 </div>
 HTML

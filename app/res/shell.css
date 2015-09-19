@@ -24,8 +24,6 @@ iframe[name="remote"] {
 a {
 	text-decoration: none;
 }
-#shell {
-}
 
 #shell ul:after {
 	content: "";
@@ -47,4 +45,9 @@ a {
 }
 #shell a:hover {
 	background: #f5f5f5;
+}
+
+#shell li h2 {
+	font-size: 18px;
+	padding: 8px;
 }

@@ -13,6 +13,7 @@ fi
 
 cat <<"HTML"
 <div id="movctrl">
+	<h2>Movie</h2>
 	<a href="/mod/movctrl seekright">Seek right</a>
 	<a href="/mod/movctrl seekleft">Seek left</a>
 	<a href="/mod/movctrl togglepause">Toggle pause</a>

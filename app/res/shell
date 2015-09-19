@@ -21,6 +21,7 @@ cat <<HTML
 					<li>$(. mods/volctrl)</li>
 					<li>$(. mods/movctrl)</li>
 					<li>$(. mods/dpyctrl)</li>
+					<li>$(. mods/mousectrl)</li>
 				</ul>
 			</div>
 		</div>

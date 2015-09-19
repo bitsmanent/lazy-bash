@@ -1,0 +1,27 @@
+# Do not show if cannot works
+[ -z "$(which xdotool)" ] && exit 1
+
+if [ -n "$1" ]; then
+	delta=5
+
+	case $1 in
+	top) xy="0 -${delta}" ;;
+	right) xy="${delta} 0" ;;
+	bottom) xy="0 ${delta}" ;;
+	left) xy="-${delta} 0" ;;
+	*) echo 404; return $STATUSCODE;;
+	esac
+
+	xdotool mousemove_relative --clearmodifiers -- $xy
+
+	exit 0
+fi
+
+cat <<"HTML"
+<div id="mousectrl">
+	<a href="/mod/mousectrl top">&uarr;</a>
+	<a href="/mod/mousectrl bottom">&darr;</a>
+	<a href="/mod/mousectrl left">&larr;</a>
+	<a href="/mod/mousectrl right">&rarr;</a>
+</div>
+HTML

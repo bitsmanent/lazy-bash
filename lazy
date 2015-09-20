@@ -84,9 +84,8 @@ newreq() {
 	done < "$1"
 }
 
-# needed?
 urlencode() {
-	echo -n "$1" |awk -niord '{printf RT?$0chr("0x"substr(RT,2)):$0}' RS=%..
+	printf %s "$1" | od -t x1 -An | tr -d '\n' | tr ' ' '%'
 }
 
 urldecode() {

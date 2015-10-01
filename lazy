@@ -84,14 +84,6 @@ newreq() {
 	done < "$1"
 }
 
-urlencode() {
-	printf %s "$1" | od -t x1 -An | tr -d '\n' | tr ' ' '%'
-}
-
-urldecode() {
-	printf "%b" "$(echo -n $1 |sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g;')";
-}
-
 detecthost() {
 	iface="$(ifconfig -s |cut -d' ' -f1 |grep -v 'Iface\|lo' |head -1)"
 	host="$(ifconfig $iface |grep inet: |cut -d: -f2 |cut -d' ' -f1)"
@@ -99,38 +91,59 @@ detecthost() {
 	echo -n "$host"
 }
 
-cleanup() {
+main() {
+	local -r host="${1:-$(detecthost)}"
+	local -r port="${2:-1234}"
+	[ -n "$3" ] && WEBROOT=$3
+
+	if [ ! -d "$WEBROOT" ]; then
+		echo "${0}: ${WEBROOT}: wrong path"
+		exit -2
+	fi
+
+	if [ ! -f "${WEBROOT}/main" ]; then
+		echo "$0: ${WEBROOT}: missing main file"
+		exit -3
+	fi
+
+	nchole "$host" "$port" newreq "$LOGFILE"
+	echo
+}
+
+# nchole is a simple script which open a bi-directional channel to allow
+# client-server communications. Protocol handling happen into a single function
+# which read the input data and is responsible to parse, understand and reply
+# by following the protocol rules.
+
+nchole_cleanup() {
 	for FN in $@; do
 		[ -e "$FN" ] && rm -f "$FN"
 	done
 }
 
-main() {
-	local -r host="${1:-$(detecthost)}"
-	local -r port="${2:-1234}"
-	local -r fifo="$(mktemp -u /tmp/lazy.fifo.XXXXX)"
-	local -r pids="$(mktemp -u /tmp/lazy.pids.XXXXX)"
+# nchole <host> <port> [callback] [error log]
+nchole() {
+	local -r host="$1"
+	local -r port="$2"
+	local -r callback="${3:-nchole_request}"
+	local -r errlog="${4:-/dev/null}"
+	local -r fifo="$(mktemp -u /tmp/nchole.fifo.XXXXX)"
+	local -r pids="$(mktemp -u /tmp/nchole.pids.XXXXX)"
 
-	[ -n "$3" ] && WEBROOT=$3
-	if [ ! -d "$WEBROOT" ]; then
-		echo "${0}: ${WEBROOT}: wrong path"
-		exit -1
-	fi
-
-	trap "cleanup '$fifo' '$pids'" EXIT INT TERM HUP
-
-	if [ ! -f "${WEBROOT}/main" ]; then
-		echo "$0: ${WEBROOT}: missing main file"
-		exit -2
-	fi
-
+	trap "nchole_cleanup '$fifo' '$pids'" EXIT INT TERM HUP
 	mkfifo -m 600 "$fifo"
 
-	echo "Running on ${host}:${port}/${WEBROOT}..."
+	noreq="$(type -t "$callback" |grep -q function ;echo $?)"
+	if [ "$noreq" -eq 1 ]; then
+		echo "$0: ${callback}: no callback defined"
+		exit 1
+	fi
+
+	echo "Running on ${host}:${port}..."
 	nc -kl "$host" $port \
-		0< <(echo -n " $BASHPID " >> "$pids"; while : ; do newreq "$fifo" ; done) \
+		0< <(echo -n " $BASHPID " >> "$pids"; while : ; do $callback "$fifo" ; done) \
 		1> >(echo -n " $BASHPID " >> "$pids"; while : ; do cat - > "$fifo" ; done) \
-		2>> "$LOGFILE"
+		2>> "$errlog"
 	rv=$?
 
 	if [ $rv -ne 0 -a $rv -ne 130 ]; then
@@ -139,8 +152,6 @@ main() {
 		rm -f "$pids"
 		exit 1
 	fi
-
-	echo
 }
 
 main "$@"

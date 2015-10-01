@@ -1,3 +1,11 @@
+urlencode() {
+	printf %s "$1" | od -t x1 -An | tr -d '\n' | tr ' ' '%'
+}
+
+urldecode() {
+	printf "%b" "$(echo -n $1 |sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g;')";
+}
+
 rescls() {
 	local -r res="$1"
 	local -r skip="$(echo 1+$(echo -n "${res}" |wc -c) | bc)"

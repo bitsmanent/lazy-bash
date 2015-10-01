@@ -106,31 +106,31 @@ main() {
 		exit -3
 	fi
 
-	nchole "$host" "$port" newreq "$LOGFILE"
+	netchan "$host" "$port" newreq "$LOGFILE"
 	echo
 }
 
-# nchole is a simple script which open a bi-directional channel to allow
+# netchan is a simple script which open a bi-directional channel to allow
 # client-server communications. Protocol handling happen into a single function
 # which read the input data and is responsible to parse, understand and reply
 # by following the protocol rules.
 
-nchole_cleanup() {
+netchan_cleanup() {
 	for FN in $@; do
 		[ -e "$FN" ] && rm -f "$FN"
 	done
 }
 
-# nchole <host> <port> [callback] [error log]
-nchole() {
+# netchan <host> <port> [callback] [error log]
+netchan() {
 	local -r host="$1"
 	local -r port="$2"
-	local -r callback="${3:-nchole_request}"
+	local -r callback="${3:-netchan_request}"
 	local -r errlog="${4:-/dev/null}"
-	local -r fifo="$(mktemp -u /tmp/nchole.fifo.XXXXX)"
-	local -r pids="$(mktemp -u /tmp/nchole.pids.XXXXX)"
+	local -r fifo="$(mktemp -u /tmp/netchan.fifo.XXXXX)"
+	local -r pids="$(mktemp -u /tmp/netchan.pids.XXXXX)"
 
-	trap "nchole_cleanup '$fifo' '$pids'" EXIT INT TERM HUP
+	trap "netchan_cleanup '$fifo' '$pids'" EXIT INT TERM HUP
 	mkfifo -m 600 "$fifo"
 
 	noreq="$(type -t "$callback" |grep -q function ;echo $?)"

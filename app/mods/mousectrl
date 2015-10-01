@@ -25,10 +25,12 @@ fi
 cat <<"HTML"
 <div id="mousectrl">
 	<h2>Mouse</h2>
-	<a href="/mod/mousectrl up">&uarr;</a>
-	<a href="/mod/mousectrl down">&darr;</a>
-	<a href="/mod/mousectrl left">&larr;</a>
-	<a href="/mod/mousectrl right">&rarr;</a>
-	<a href="/mod/mousectrl click">Click</a>
+	<div>
+		<a href="/mod/mousectrl up">&uarr;</a>
+		<a href="/mod/mousectrl down">&darr;</a>
+		<a href="/mod/mousectrl left">&larr;</a>
+		<a href="/mod/mousectrl right">&rarr;</a>
+		<a href="/mod/mousectrl click">Click</a>
+	</div>
 </div>
 HTML

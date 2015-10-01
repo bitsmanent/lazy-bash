@@ -3,14 +3,13 @@ ul {
 	list-style: none;
 	padding: 0;
 }
-header {
-	padding: 8px;
-	background: #eee;
-}
-header h1 {
-	font: arial, sans-serif, helvetica, monospace;
-	font-size: 16px;
-	text-transform: uppercase;
+body {
+	background: #d3e2d4;
+	background: linear-gradient(135deg, #d3e2d4,#819083) top left fixed;
+	font: 14px 'Ubuntu Condensed', sans-serif;
+	line-height: 1;
+	min-height: 580px;
+	-webkit-font-smoothing: antialiased;
 }
 
 iframe[name="remote"] {
@@ -30,8 +29,43 @@ a {
 	clear: both;
 	display: block;
 }
-#shell li {
-	float: left;
+#shell {
+	width: 280px;
+	margin: 0 auto;
+	background: #f5f5f5;
+	border-radius: 4px;
+
+	margin-top: 26px;
+	user-select: none;
+	-webkit-user-select: none;
+	cursor: default;
+}
+#shell header {
+	padding: 8px;
+	font-family: sans-serif, helvetica;
+	font-size: 13px;
+}
+#shell li > div {padding:8px}
+#shell li:nth-child(1) > div {
+	color: #af9a50;
+	background: linear-gradient(135deg,#f7ffce,#e2e4b8);
+}
+#shell li:nth-child(2) > div {
+	color: #e07556;
+	background: linear-gradient(135deg,#ffe26f,#e8c962);
+}
+#shell li:nth-child(3) > div {
+	color: #9c3c53;
+	background: linear-gradient(135deg,#f3825f,#f3825f);
+}
+#shell li:nth-child(4) > div {
+	color: #402344;
+	background: linear-gradient(135deg,#563761,#502f55);
+}
+#shell li > div > div {
+}
+#shell li.active > div > div {
+	height: 100%;
 }
 
 #shell a {

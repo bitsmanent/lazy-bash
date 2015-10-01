@@ -12,11 +12,8 @@ cat <<HTML
 	</head>
 	<body>
 		<div id="container">
-			<header>
-				<h1>Lazy shell</h1>
-			</header>
-
 			<div id="shell">
+				<header>Lazy-bash</header>
 				<ul>
 					<li>$(. mods/volctrl)</li>
 					<li>$(. mods/movctrl)</li>

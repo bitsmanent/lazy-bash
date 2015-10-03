@@ -2,8 +2,8 @@ export DISPLAY=:0
 
 if [ -n "$1" ]; then
 	info="$(xrandr |grep ' connected' |cut -d'(' -f1 |head -1)"
-	#out="$(echo $info |cut -d' ' -f1)"
-	#state="$(echo $info |cut -d' ' -f2)"
+	out="$(echo $info |cut -d' ' -f1)"
+	state="$(echo $info |cut -d' ' -f2)"
 	res="$(echo $info |cut -d' ' -f3)"
 	[ -z "$res" ] && ison=0 || ison=1
 
@@ -13,9 +13,12 @@ if [ -n "$1" ]; then
 		[ $ison -eq 0 ] && cmd="$cmd --auto" || cmd="$cmd --off"
 		$cmd
 		;;
+	info) ;;
 	*) echo 404; return $STATUSCODE;;
 	esac
-	# XXX output current state
+
+	tojson "([out]="$out" [state]="$state" [res]="$res" [ison]="$ison")"
+
 	exit 0
 fi
 

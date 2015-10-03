@@ -8,12 +8,12 @@ cat <<HTML
 		<title>Lazy shell</title>
 
 		<link rel="stylesheet" href="res/shell.css" type="text/css" media="screen, handheld" title="default" />
+		<script src="res/utils.js"></script>
 		<script src="res/shell.js"></script>
 	</head>
 	<body>
 		<div id="container">
 			<div id="shell">
-				<header>Lazy-bash</header>
 				<ul>
 					<li>$(. mods/volctrl)</li>
 					<li>$(. mods/movctrl)</li>

@@ -24,11 +24,6 @@ a {
 	text-decoration: none;
 }
 
-#shell ul:after {
-	content: "";
-	clear: both;
-	display: block;
-}
 #shell {
 	width: 280px;
 	margin: 0 auto;
@@ -40,48 +35,18 @@ a {
 	-webkit-user-select: none;
 	cursor: default;
 }
-#shell header {
-	padding: 8px;
-	font-family: sans-serif, helvetica;
-	font-size: 13px;
-}
-#shell li > div {padding:8px}
-#shell li:nth-child(1) > div {
-	color: #af9a50;
-	background: linear-gradient(135deg,#f7ffce,#e2e4b8);
-}
-#shell li:nth-child(2) > div {
+
+/* XXX Move the following to proper files... */
+
+#movctrl {
 	color: #e07556;
 	background: linear-gradient(135deg,#ffe26f,#e8c962);
 }
-#shell li:nth-child(3) > div {
+#dpyctrl {
 	color: #9c3c53;
 	background: linear-gradient(135deg,#f3825f,#f3825f);
 }
-#shell li:nth-child(4) > div {
+#mousectrl {
 	color: #402344;
 	background: linear-gradient(135deg,#563761,#502f55);
-}
-#shell li > div > div {
-}
-#shell li.active > div > div {
-	height: 100%;
-}
-
-#shell a {
-	display: block;
-	color: #000;
-	width: 150px;
-	border: 1px solid #000;
-	text-align: center;
-	margin: 3px;
-	padding: 8px;
-}
-#shell a:hover {
-	background: #f5f5f5;
-}
-
-#shell li h2 {
-	font-size: 18px;
-	padding: 8px;
 }

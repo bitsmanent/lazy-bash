@@ -1,15 +1,34 @@
 if [ -n "$1" ]; then
 	case $1 in
-	up) amixer set Master 3%+ ;;
-	down) amixer set Master 3%- ;;
-	togglemute) amixer set Master toggle ;;
-	*) echo 404; return $STATUSCODE;;
+	up) amixer -q set Master 3%+ ;;
+	down) amixer -q set Master 3%- ;;
+	togglemute) amixer -q set Master toggle ;;
+	*) echo 404; return $STATUSCODE ;;
 	esac
-	# XXX output volume and mute status
+
+	# Return some data to the client...
+
+        fds=$(amixer get Master |tail -1  |sed 's/.*\[\([^ ]*\)\] \[\([^ ]*\)\] \[\([^ ]*\)\].*/\1|\2|\3/')
+        pct=$(echo $fds |cut -d'|' -f1)
+        dcbl=$(echo $fds |cut -d'|' -f2)
+        mute=$(echo $fds |cut -d'|' -f3)
+
+	tojson "([pct]="$pct" [dcbl]="$dcbl" [mute]="$mute")"
+
 	exit 0
 fi
 
 cat <<"HTML"
+<style>
+#volctrl {
+	color: #af9a50;
+	background: linear-gradient(135deg,#f7ffce,#e2e4b8);
+}
+#volctrl h2 {
+	font-size: 18px;
+	padding: 8px;
+}
+</style>
 <div id="volctrl">
 	<h2>Volume</h2>
 	<div>

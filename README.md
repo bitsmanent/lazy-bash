@@ -34,4 +34,4 @@ Note: you must be root in order to run lazy-bash on port 80.
 
 Configuration
 =============
-The customization is done by editing the source code, then (re)install lazy.
+The customization is done by editing the source code.

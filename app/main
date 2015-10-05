@@ -1,27 +1,4 @@
-urlencode() {
-	printf %s "$1" | od -t x1 -An | tr -d '\n' | tr ' ' '%'
-}
-
-urldecode() {
-	printf "%b" "$(echo -n $1 |sed 's/%\([0-9A-Fa-f][0-9A-Fa-f]\)/\\x\1/g;')";
-}
-
-tojson() {
-	local -A obj="$1"
-	local json i k v
-
-	i="${#obj[@]}"
-	json="{"
-	for k in ${!obj[@]}; do
-		v="${obj[$k]}"
-		json+="\"$k\": \"$v\"";
-		let i-=1
-		[ "$i" -gt 0 ] && json+=","
-	done
-	json+="}"
-
-	echo "$json"
-}
+. utils
 
 rescls() {
 	local -r res="$1"

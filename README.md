@@ -32,6 +32,16 @@ The lazy command will tell you on which host:port is listening so just point
 your browser there to get started.
 Note: you must be root in order to run lazy-bash on port 80.
 
+Alternatively, you can specify the webroot in the command line:
+
+```
+$ lazy "" "" <web-root>
+```
+
+The empty strings "" let lazy decide the address and port (respectively) to
+listen on. You may want to make an alias for the above command in your shell in
+order to only type "lazy".
+
 Configuration
 =============
 The customization is done by editing the source code.

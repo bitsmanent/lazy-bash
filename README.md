@@ -16,10 +16,9 @@ In order to run lazy-bash you need the bash shell and a Unix userland.
 
 Installation
 ============
-An installation script will be available soon. For now, run as root:
+To install lazy enter the following command (as root if needed):
 ```
-# chmod +x lazy
-# cp -p lazy /usr/local/bin
+# make install
 ```
 
 Running

@@ -12,7 +12,8 @@ happen but the core should be more or less ready.
 
 Requirements
 ============
-In order to run lazy-bash you need the bash shell and a Unix userland.
+In order to run lazy-bash you need the bash shell and a Unix userland and, of
+course, the netcat program.
 
 Installation
 ============
